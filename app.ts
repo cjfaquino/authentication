@@ -8,6 +8,7 @@ import indexRouter from './routes';
 import signUpRouter from './routes/sign-up';
 import User from './models/User';
 import logInRouter from './routes/log-in';
+import logOutRouter from './routes/log-out';
 
 dotenv.config();
 
@@ -65,5 +66,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', indexRouter);
 app.use('/sign-up', signUpRouter);
 app.use('/log-in', logInRouter);
+app.use('/log-out', logOutRouter);
 
 app.listen(3000, () => console.log('app listening on port 3000!'));
