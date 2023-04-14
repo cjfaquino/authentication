@@ -4,6 +4,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import mongoose, { Schema, ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
+import bcryptjs from 'bcryptjs';
 
 import indexRouter from './routes';
 import signUpRouter from './routes/sign-up';
@@ -22,7 +23,7 @@ passport.use(
         return done(null, false, { message: 'Incorrect Username' });
       }
 
-      if (user.password !== password) {
+      if (!(await bcryptjs.compare(password, user.password))) {
         return done(null, false, { message: 'Incorrect Password' });
       }
 
