@@ -4,6 +4,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import mongoose, { Schema, ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
+
 import indexRouter from './routes';
 import signUpRouter from './routes/sign-up';
 import User from './models/User';
