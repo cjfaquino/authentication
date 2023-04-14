@@ -6,8 +6,43 @@ import mongoose, { Schema, ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
 import indexRouter from './routes';
 import signUpRouter from './routes/sign-up';
+import User from './models/User';
+import logInRouter from './routes/log-in';
 
 dotenv.config();
+
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
+    try {
+      const user = await User.findOne({ username });
+
+      if (!user) {
+        return done(null, false, { message: 'Incorrect Username' });
+      }
+
+      if (user.password !== password) {
+        return done(null, false, { message: 'Incorrect Password' });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  })
+);
+
+passport.serializeUser((user: any, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+});
 
 const mongoDb = process.env.MONGO_URI || 'mongo string';
 
@@ -29,5 +64,6 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
 app.use('/sign-up', signUpRouter);
+app.use('/log-in', logInRouter);
 
 app.listen(3000, () => console.log('app listening on port 3000!'));
